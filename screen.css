@@ -1,4 +1,9 @@
-﻿.contact-container { width:400px; padding:10px; border:1px solid #aaa; margin:0 10px 10px 0; float:left; font-family:sans-serif; color:#333; background-color:#eee; }
+﻿#form { float: left; width: 20%;}
+#contacts { float: right; width: 80%;}
+
+label { display: block;}
+
+.contact-container { width:400px; padding:10px; border:1px solid #aaa; margin:0 10px 10px 0; float:left; font-family:sans-serif; color:#333; background-color:#eee; }
 .contact-container div { font-size:14px; }
 .contact-container div.address { margin-bottom:24px; }
 .contact-container div.title { margin-bottom:3px; }

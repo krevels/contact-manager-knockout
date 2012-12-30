@@ -6,29 +6,34 @@
 		<link rel="stylesheet" href="screen.css" />
 	</head>
 	<body>
-		<div id="contacts">
-			<header>
-				<div id="filter"><label>Show me</label>
+		<div>
+			<div id="form">
+				<fieldset id="filter">
+					<legend>Filter Records</legend>
 					<select data-bind="
 						options: types, 
 						optionsCaption: 'All', 
-						value: selected_type"
-					></select></div>
-			</header>
+						value: selected_type">
+					</select>
+				</fieldset>
 
-			<form id="addContact" action="#">
-			    <label for="photo">photo:</label><input id="photo" type="file" />
-	    		<label for="type">Type:</label><input id="type" />
-	    		<label for="name">Name:</label><input id="name" />
-			    <label for="address">Address:</label><input id="address" />
-			    <label for="tel">Tel:</label><input id="tel" />
-			    <label for="email">Email:</label><input id="email" />
-			    <button id="add">Add</button>
-			</form>
-
-			<div data-bind="template: { name: 'contactTemplate', foreach: contacts}"></div>
-
+				<form id="addContact" action="#" data-bind="submit: add_contact">
+					<fieldset form="addContact">
+						<legend>Add New Contact</legend>
+					    <label>Photo: <input name="photo" type="file" /></label>
+			    		<label>Type: <input name="type" id="type" /> </label>
+			    		<label>Name: <input name="name" /></label>
+					    <label>Address: <input name="address" /></label>
+					    <label>Tel: <input name="tel" /></label>
+					    <label>Email: <input name="email" /></label>
+					    
+					    <button type="submit">Add</button>
+					</fieldset>
+				</form>
+			</div>
+			<div id="contacts" data-bind="template: { name: 'contactTemplate', foreach: filtered_contacts, beforeRemove: hide_contact, afterAdd: show_contact }"></div>
 		</div>
+
 		<script id="contactTemplate" type="text/template">
 			<div class="contact-container">
 				<img data-bind="attr: { src: $root.photo, alt: name }" />
