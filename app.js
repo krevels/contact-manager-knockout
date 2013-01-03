@@ -43,12 +43,6 @@ function ContactManager(){
 		}
 	}
 
-	/*
-	function ContactView(){
-		var self = this;
-		self.default_photo = 'placeholder.png';
-	}*/
-
 	function ContactListView(c) {
 		var list = c || [],
 			self = this;
@@ -124,11 +118,7 @@ function ContactManager(){
 		}
 
 		/* bind views */
-		//ko.applyBindings(new ContactView(), $('.contact-container').get(0));
 		ko.applyBindings(new ContactListView(cl), $('#contact-list').get(0));
 	}
 }	
 
-/*
-		var contacts = ko.observableArray();
-*/
