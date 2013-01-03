@@ -4,63 +4,131 @@ $(document).ready(function(){
 });
 
 function ContactManager(){
-	function ContactsView() {
-		var self = this;
+	function Contact(o){
+		this.name = o.name || null;
+		this.address = o.address || null;
+		this.tel = o.tel || null;
+		this.email = o.email || null;
+		this.type = o.type || null;
+		
+		/* http://stackoverflow.com/a/2117523/118898 */
+		this.id = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    		var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+    		return v.toString(16);
+		});
+	}
 
-		var contacts = ko.observableArray([
-			{ name: "Contact 1", address: "1, a street, a town, a city, AB12 3CD", tel: "0123456789", email: "anemail@me.com", type: "family" },
-			{ name: "Contact 2", address: "1, a street, a town, a city, AB12 3CD", tel: "0123456789", email: "anemail@me.com", type: "family" },
-			{ name: "Contact 3", address: "1, a street, a town, a city, AB12 3CD", tel: "0123456789", email: "anemail@me.com", type: "friend" },
-			{ name: "Contact 4", address: "1, a street, a town, a city, AB12 3CD", tel: "0123456789", email: "anemail@me.com", type: "colleague" },
-			{ name: "Contact 5", address: "1, a street, a town, a city, AB12 3CD", tel: "0123456789", email: "anemail@me.com", type: "family" },
-			{ name: "Contact 6", address: "1, a street, a town, a city, AB12 3CD", tel: "0123456789", email: "anemail@me.com", type: "colleague" },
-			{ name: "Contact 7", address: "1, a street, a town, a city, AB12 3CD", tel: "0123456789", email: "anemail@me.com", type: "friend" },
-			{ name: "Contact 8", address: "1, a street, a town, a city, AB12 3CD", tel: "0123456789", email: "anemail@me.com", type: "family" }
-		]);
+	function ContactList(c){
+		this.collection = c || [];
+		
+		var self = this,
+			storage_key = 'krevels-contact-manager:contacts';
+
+		/* 	check localstorage for existing contacts, otherwise
+		 *	load the defaults 
+		 */
+		this.load = function(){
+			try{ 
+				var stored_contacts = JSON.parse(localStorage.getItem(storage_key));
+
+				$.each(stored_contacts, function(){
+					self.collection.push(new Contact(this));
+				});
+			}
+			catch(e){}
+		};
+
+		this.save = function(){
+			localStorage.setItem(storage_key, JSON.stringify(self.collection));
+		}
+	}
+
+	/*
+	function ContactView(){
+		var self = this;
+		self.default_photo = 'placeholder.png';
+	}*/
+
+	function ContactListView(c) {
+		var list = c || [],
+			self = this;
+
+		self.default_photo = 'placeholder.png'
+
+		self.list = ko.observableArray(list.collection);
+
+		self.list.subscribe(list.save)
 
 		self.selected_type = ko.observable();
 
-		self.hide_contact = function(e){
-			if(e.nodeType === 1){
-				$(e).fadeOut();
-			}
-		};
-
-		self.show_contact = function(e){
-			if(e.nodeType === 1){
-				$(e).fadeIn();
-			}
-		};
-
-		self.add_contact = function(form) {
-			var new_contact = {},
-				fields = $(form).serializeArray();
-
-			for(var i=0,j;j = fields[i++]; ){
-				new_contact[j.name] = j.value;
-			}
-
-			contacts.push(new_contact);
-			
-			$(form)[0].reset();
-			return false;
-		};
-
-		self.filtered_contacts = ko.computed(function(){
-			return $.map(contacts(), function(v){ 
+		self.filtered_list = ko.computed(function(){
+			return $.map(self.list(), function(v){ 
 				if(typeof self.selected_type() == 'undefined' || v.type == self.selected_type()) 
 					return v; 
 			});
 		});
 
-		self.photo = 'placeholder.png',
 		self.types = ko.computed(function(){
-			return $.unique($.map(contacts(), function(v){ return v.type; }));
+			return $.unique($.map(self.list(), function(v){ return v.type; }));
 		});
+
+		self.hide = function(e){
+			if(e.nodeType === 1) $(e).fadeOut();
+		};
+
+		self.show = function(e){
+			if(e.nodeType === 1) $(e).fadeIn();
+		};
+
+		self.add = function(form) {
+			var new_contact = {};
+
+			$.each($(form).serializeArray(), function(){
+				new_contact[this.name] = this.value;
+			});
+
+			self.list.push(new_contact);
+			
+			$(form)[0].reset();
+			return false;
+		};
+
+		self.delete = function(e){
+			self.list.remove(function(item){
+				return item.id == e.id
+			});
+		}
+		
 	};
 
 	this.init = function(){
-		ko.applyBindings(new ContactsView());
+		var cl = new ContactList();
+		cl.load();
+
+		// load in some default stuff if we have an empty list
+		if(cl.collection.length == 0){
+			var defaults = [
+				{ name: "Contact 1", address: "1, a street, a town, a city, AB12 3CD", tel: "0123456789", email: "anemail@me.com", type: "family" },
+				{ name: "Contact 2", address: "1, a street, a town, a city, AB12 3CD", tel: "0123456789", email: "anemail@me.com", type: "family" },
+				{ name: "Contact 3", address: "1, a street, a town, a city, AB12 3CD", tel: "0123456789", email: "anemail@me.com", type: "friend" },
+				{ name: "Contact 4", address: "1, a street, a town, a city, AB12 3CD", tel: "0123456789", email: "anemail@me.com", type: "colleague" },
+				{ name: "Contact 5", address: "1, a street, a town, a city, AB12 3CD", tel: "0123456789", email: "anemail@me.com", type: "family" },
+				{ name: "Contact 6", address: "1, a street, a town, a city, AB12 3CD", tel: "0123456789", email: "anemail@me.com", type: "colleague" },
+				{ name: "Contact 7", address: "1, a street, a town, a city, AB12 3CD", tel: "0123456789", email: "anemail@me.com", type: "friend" },
+				{ name: "Contact 8", address: "1, a street, a town, a city, AB12 3CD", tel: "0123456789", email: "anemail@me.com", type: "family" }
+			];
+
+			$.each(defaults, function(){
+				cl.collection.push(new Contact(this));
+			})
+		}
+
+		/* bind views */
+		//ko.applyBindings(new ContactView(), $('.contact-container').get(0));
+		ko.applyBindings(new ContactListView(cl), $('#contact-list').get(0));
 	}
 }	
 
+/*
+		var contacts = ko.observableArray();
+*/

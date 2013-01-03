@@ -1,7 +1,8 @@
-﻿#form { float: left; width: 20%;}
-#contacts { float: right; width: 80%;}
+﻿#form { float: left; }
+#contacts { float: right; width: 75%;}
 
 label { display: block;}
+fieldset { -webkit-border-radius: 14px; -moz-border-radius: 14px; border-radius: 14px; margin-bottom: 50px;}
 
 .contact-container { width:400px; padding:10px; border:1px solid #aaa; margin:0 10px 10px 0; float:left; font-family:sans-serif; color:#333; background-color:#eee; }
 .contact-container div { font-size:14px; }
@@ -11,6 +12,7 @@ label { display: block;}
 .contact-container .type { float:right; font-size:14px; line-height:24px; font-weight:normal; }
 .contact-container img { border-width:1px; border-style:solid; border-color:#fff; border-right-color:#aaa; border-bottom-color:#aaa; margin-right:10px; float:left; }
 .contact-container a { color:#333;}
-.contact-container dl { margin:0; float:left; font-size:14px; }
+.contact-container dl { margin:0; float:left; font-size:14px; float:left;}
+.contact-container span.delete { display: block; font-weight: bold; cursor: pointer; float: right;}
 .contact-container dt, .contact-container dd { margin:0; float:left; }
 .contact-container dt { width:50px; clear:left; }

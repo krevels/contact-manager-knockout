@@ -6,7 +6,7 @@
 		<link rel="stylesheet" href="screen.css" />
 	</head>
 	<body>
-		<div>
+		<div id="contact-list">
 			<div id="form">
 				<fieldset id="filter">
 					<legend>Filter Records</legend>
@@ -17,7 +17,7 @@
 					</select>
 				</fieldset>
 
-				<form id="addContact" action="#" data-bind="submit: add_contact">
+				<form id="addContact" action="#" data-bind="submit: add">
 					<fieldset form="addContact">
 						<legend>Add New Contact</legend>
 					    <!-- <label>Photo: <input name="photo" type="file" /></label> -->
@@ -31,18 +31,21 @@
 					</fieldset>
 				</form>
 			</div>
-			<div id="contacts" data-bind="template: { name: 'contactTemplate', foreach: filtered_contacts, beforeRemove: hide_contact, afterAdd: show_contact }"></div>
+			<div id="contacts" data-bind="template: { name: 'contactTemplate', foreach: filtered_list, beforeRemove: hide, afterAdd: show }"></div>
 		</div>
 
 		<script id="contactTemplate" type="text/template">
 			<div class="contact-container">
-				<img data-bind="attr: { src: $root.photo, alt: name }" />
+				<img data-bind="attr: { src: $root.default_photo, alt: name }" />
 				<div class="header"><span class="name" data-bind="text: name"></span><span class="type" data-bind="text: type"></span></div>
 				<div class="address" data-bind="text: address"></div>
-				<dl>
-					<dt>Tel:</dt><dd data-bind="text: tel"></dd>
-					<dt>Email:</dt><dd><a data-bind="attr: { href: email }, text: email"></a></dd>
-				</dl>
+				<div> 
+					<dl>
+						<dt>Tel:</dt><dd data-bind="text: tel"></dd>
+						<dt>Email:</dt><dd><a data-bind="attr: { href: email }, text: email"></a></dd>
+					</dl>
+					<span class="delete" title="Delete" data-bind="click: $root.delete">[x]<span>
+				</div>
 			</div>
 		</script>
 
